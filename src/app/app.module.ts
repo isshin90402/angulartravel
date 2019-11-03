@@ -9,26 +9,24 @@ import { FlightListComponent } from './flight-list/flight-list.component';
 import { AngularMaterialModule } from './angular-material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    FlightListComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    AngularMaterialModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FlexLayoutModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+	declarations: [ AppComponent, HomeComponent, FlightListComponent ],
+	imports: [
+		BrowserModule,
+		AppRoutingModule,
+		AngularMaterialModule,
+		BrowserAnimationsModule,
+		FormsModule,
+		ReactiveFormsModule,
+		FlexLayoutModule,
+		HttpClientModule
+	],
+	providers: [],
+	bootstrap: [ AppComponent ]
 })
-export class AppModule { }
+export class AppModule {}
