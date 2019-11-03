@@ -12,6 +12,7 @@ export class SabreService {
 	baseUrl = 'https://api-crt.cert.havail.sabre.com/';
 	apiPath = 'v2/auth/token';
 	token = '';
+	cities: any[];
 
 	constructor(private http: HttpClient) { }
 

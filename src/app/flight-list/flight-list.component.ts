@@ -17,9 +17,5 @@ export class FlightListComponent implements OnInit {
 		/* this.sabreService.getAirports(this.baseUrl, 'BJS', this.token).subscribe((response) => {
 			console.log(response);
 		}); */
-
-		/* this.sabreService.getCities(this.sabreService.baseUrl, 'GB', this.token).subscribe((response) => {
-			console.log(response);
-		}); */
 	}
 }

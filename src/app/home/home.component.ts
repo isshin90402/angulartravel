@@ -6,6 +6,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import * as moment from 'moment';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { LocationService } from '../shared/location.service';
+import { SabreService } from '../shared/sabre.service';
 
 @Component({
 	selector: 'app-home',
@@ -22,7 +23,7 @@ export class HomeComponent implements OnInit {
 
 	returnDatePlaceholder: string = 'Choose return date';
 
-	constructor(private locationService: LocationService, private formBuilder: FormBuilder, private router: Router) {}
+	constructor(private locationService: LocationService, private sabreService: SabreService, private formBuilder: FormBuilder, private router: Router) {}
 
 	frLocationControl: FormControl = new FormControl();
 	toLocationControl: FormControl = new FormControl();
@@ -53,7 +54,8 @@ export class HomeComponent implements OnInit {
 	});
 
 	ngOnInit() {
-		this.locations = this.locationService.getLocations();
+		//this.locations = this.locationService.getLocations();
+		this.locations = this.sabreService.cities;
 
 		this.frLocationControl.setValidators(this._validateAirport.bind(this));
 		this.toLocationControl.setValidators(this._validateAirport.bind(this));

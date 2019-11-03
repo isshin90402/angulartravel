@@ -17,5 +17,10 @@ export class AppComponent {
     if (this.token === '') {
       this.sabreService.setToken();
     }
+
+    this.sabreService.getCities(this.sabreService.baseUrl, '', this.token).subscribe((response) => {
+      this.sabreService.cities = response;
+      console.log('get cities: ', this.sabreService.cities);
+		});
   }
 }
