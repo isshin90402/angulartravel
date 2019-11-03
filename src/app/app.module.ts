@@ -15,18 +15,18 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-	declarations: [ AppComponent, HomeComponent, FlightListComponent ],
-	imports: [
-		BrowserModule,
-		AppRoutingModule,
-		AngularMaterialModule,
-		BrowserAnimationsModule,
-		FormsModule,
-		ReactiveFormsModule,
-		FlexLayoutModule,
-		HttpClientModule
-	],
-	providers: [],
-	bootstrap: [ AppComponent ]
+  declarations: [AppComponent, HomeComponent, FlightListComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    AngularMaterialModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    HttpClientModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
