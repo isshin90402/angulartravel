@@ -1,25 +1,25 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from "@angular/core";
 import {
   FormControl,
   FormBuilder,
   Validators,
   FormGroup
-} from '@angular/forms';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
-import { MatRadioChange } from '@angular/material/radio';
-import * as moment from 'moment';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { LocationService } from '../shared/location.service';
-import { SabreService } from '../shared/sabre.service';
+} from "@angular/forms";
+import { Observable } from "rxjs";
+import { startWith, map } from "rxjs/operators";
+import { MatRadioChange } from "@angular/material/radio";
+import * as moment from "moment";
+import { Router, ActivatedRoute, ParamMap } from "@angular/router";
+import { LocationService } from "../shared/location.service";
+import { SabreService } from "../shared/sabre.service";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.css"]
 })
 export class HomeComponent implements OnInit {
-  @ViewChild('oneWayReturn', { static: false })
+  @ViewChild("oneWayReturn", { static: false })
   oneWayReturn: any;
 
   locations: any[];
@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   filteredLocationsFr: Observable<string[]>;
   filteredLocationsTo: Observable<string[]>;
 
-  returnDatePlaceholder = 'Choose return date';
+  returnDatePlaceholder = "Choose return date";
 
   constructor(
     private locationService: LocationService,
@@ -61,40 +61,40 @@ export class HomeComponent implements OnInit {
   form = this.formBuilder.group({
     airportGroup: this.airportGroup,
     dateGroup: this.dateGroup,
-    isOneWay: ['', Validators.required]
+    isOneWay: ["", Validators.required]
   });
 
   ngOnInit() {
     // this.locations = this.locationService.getLocations();
     this.locations = this.sabreService.getLocalStorageCities();
 
-    this.locationsRefined = this.locations.map(x =>
-      x.name + ', ' + x.countryName
+    this.locationsRefined = this.locations.map(
+      x => x.name + " (" + x.code + ")" + ", " + x.countryName
     );
 
     this.frLocationControl.setValidators(this._validateAirport.bind(this));
     this.toLocationControl.setValidators(this._validateAirport.bind(this));
 
     this.filteredLocationsFr = this.frLocationControl.valueChanges.pipe(
-      startWith(''),
+      startWith(""),
       map(value => this._filter(value))
     );
 
     this.filteredLocationsTo = this.toLocationControl.valueChanges.pipe(
-      startWith(''),
+      startWith(""),
       map(value => this._filter(value))
     );
   }
 
   private _validateAirport(control: FormControl) {
-    return this.locations.includes(control.value)
+    return this.locationsRefined.includes(control.value)
       ? null
       : { validateAirport: { valid: false } };
   }
 
   private _validateDepartEarlierThanReturnDate(formGroup: FormGroup) {
-    const departDate = formGroup.get('departDate').value;
-    const returnDate = formGroup.get('returnDate').value;
+    const departDate = formGroup.get("departDate").value;
+    const returnDate = formGroup.get("returnDate").value;
 
     if (departDate === null || returnDate === null) {
       return null;
@@ -106,8 +106,8 @@ export class HomeComponent implements OnInit {
   }
 
   private _validateSameAirports(formGroup: FormGroup) {
-    const fromAirport = formGroup.get('fromAirport').value;
-    const toAirport = formGroup.get('toAirport').value;
+    const fromAirport = formGroup.get("fromAirport").value;
+    const toAirport = formGroup.get("toAirport").value;
 
     if (fromAirport === null || toAirport === null) {
       return null;
@@ -126,18 +126,18 @@ export class HomeComponent implements OnInit {
 
   // Need to improve
   private _oneWayReturnHandler(event: MatRadioChange) {
-    if (event.value === 'oneWay') {
-      this.returnDatePlaceholder = 'One way';
+    if (event.value === "oneWay") {
+      this.returnDatePlaceholder = "One way";
       this.returnDateControl.disable();
-    } else if (event.value === 'return') {
-      this.returnDatePlaceholder = 'Choose return date';
+    } else if (event.value === "return") {
+      this.returnDatePlaceholder = "Choose return date";
       this.returnDateControl.enable();
     }
   }
 
   // Not working
   private _validateDate(control: FormControl) {
-    if (moment(control.value, 'DD-MM-YYYY', true).isValid()) {
+    if (moment(control.value, "DD-MM-YYYY", true).isValid()) {
       return null;
     } else {
       return { dateIsValid: { valid: false } };
@@ -145,6 +145,6 @@ export class HomeComponent implements OnInit {
   }
 
   public searchClicked(event: Event) {
-    this.router.navigate(['/flights']);
+    this.router.navigate(["/flights"]);
   }
 }
