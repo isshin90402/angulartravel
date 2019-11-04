@@ -20,8 +20,11 @@ export class AppComponent implements OnInit {
     this.sabreService
       .getCities(this.sabreService.baseUrl, '', this.token)
       .subscribe(response => {
-        this.sabreService.cities = response;
-        console.log('get cities: ', this.sabreService.cities);
+        this.sabreService.cities = response.Cities;
+        localStorage.setItem(
+          'cities',
+          JSON.stringify({ cities: this.sabreService.cities })
+        );
       });
   }
 }

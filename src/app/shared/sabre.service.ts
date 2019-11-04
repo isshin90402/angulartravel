@@ -112,4 +112,9 @@ export class SabreService {
     const localStorageItem = JSON.parse(localStorage.getItem('access_token'));
     return localStorageItem == null ? '' : localStorageItem.access_token;
   }
+
+  getLocalStorageCities(): any[] {
+    const localStorageItem = JSON.parse(localStorage.getItem('cities'));
+    return localStorageItem == null ? '' : localStorageItem.cities;
+  }
 }

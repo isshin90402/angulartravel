@@ -11,7 +11,7 @@
                         </mat-error>
                         <mat-autocomplete #frLocation="matAutocomplete">
                             <mat-option *ngFor="let location of filteredLocationsFr | async" [value]="location">
-                                {{ location.name }}
+                                {{ location }}
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>
@@ -23,7 +23,7 @@
                         </mat-error>
                         <mat-autocomplete #toLocation="matAutocomplete">
                             <mat-option *ngFor="let location of filteredLocationsTo | async" [value]="location">
-                                {{ location.name }}
+                                {{ location }}
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>
