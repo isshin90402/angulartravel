@@ -2,6 +2,11 @@
   <form [formGroup]="form" (ngSubmit)="searchClicked($event)">
     <div class="row" formGroupName="airportGroup">
       <mat-form-field class="w-25">
+        <mat-icon
+          svgIcon="flight_takeoff"
+          aria-hidden="false"
+          aria-label="Example thumbs up SVG icon"
+        ></mat-icon>
         <input
           matInput
           placeholder="From"
@@ -23,6 +28,11 @@
         </mat-autocomplete>
       </mat-form-field>
       <mat-form-field class="ml-3 w-25">
+        <mat-icon
+          svgIcon="flight_land"
+          aria-hidden="false"
+          aria-label="Example thumbs up SVG icon"
+        ></mat-icon>
         <input
           matInput
           placeholder="To"
