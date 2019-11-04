@@ -68,7 +68,7 @@ export class HomeComponent implements OnInit {
     // this.locations = this.locationService.getLocations();
     this.locations = this.sabreService.getLocalStorageCities();
 
-    this.locationsRefined = this.locations.map(x => 
+    this.locationsRefined = this.locations.map(x =>
       x.name + ', ' + x.countryName
     );
 

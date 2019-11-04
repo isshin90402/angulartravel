@@ -1,74 +1,104 @@
-<div class="container">
-    <div class="row">
-        <div class="col col-lg-6 col-sm-12 mt-5">
-            <form [formGroup]="form" (ngSubmit)="searchClicked($event)">
-                <div class="row" formGroupName="airportGroup">
-                    <mat-form-field>
-                        <input matInput placeholder="From" type="text" [formControl]="frLocationControl"
-                            [matAutocomplete]="frLocation" formControlName="fromAirport" />
-                        <mat-error *ngIf="frLocationControl.hasError('validateAirport')">
-                            Please enter a valid airport
-                        </mat-error>
-                        <mat-autocomplete #frLocation="matAutocomplete">
-                            <mat-option *ngFor="let location of filteredLocationsFr | async" [value]="location">
-                                {{ location }}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                    <mat-form-field class="ml-3">
-                        <input matInput placeholder="To" type="text" [formControl]="toLocationControl"
-                            [matAutocomplete]="toLocation" formControlName="toAirport" />
-                        <mat-error *ngIf="toLocationControl.hasError('validateAirport')">
-                            Please enter a valid airport
-                        </mat-error>
-                        <mat-autocomplete #toLocation="matAutocomplete">
-                            <mat-option *ngFor="let location of filteredLocationsTo | async" [value]="location">
-                                {{ location }}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-                <mat-error *ngIf="airportGroup.hasError('airportsCannotBeTheSame')">
-                    Airports cannot be the same
-                </mat-error>
-                <div class="row mt-3" formGroupName="dateGroup">
-                    <mat-form-field>
-                        <input matInput [matDatepicker]="departPicker" placeholder="Choose depart date"
-                            formControlName="departDate" [formControl]="departDateControl" />
-                        <mat-error *ngIf="departDateControl.hasError('dateIsValid')">
-                            Please enter a valid date
-                        </mat-error>
-                        <mat-datepicker-toggle matSuffix [for]="departPicker"></mat-datepicker-toggle>
-                        <mat-datepicker #departPicker></mat-datepicker>
-                    </mat-form-field>
-                    <mat-form-field class="ml-3">
-                        <input matInput [matDatepicker]="returnPicker" placeholder="{{returnDatePlaceholder}}"
-                            formControlName="returnDate" [formControl]="returnDateControl" />
-                        <mat-error *ngIf="returnDateControl.hasError('dateIsValid')">
-                            Please enter a valid date
-                        </mat-error>
-                        <mat-datepicker-toggle matSuffix [for]="returnPicker"></mat-datepicker-toggle>
-                        <mat-datepicker #returnPicker></mat-datepicker>
-                    </mat-form-field>
-                </div>
-                <mat-error *ngIf="dateGroup.hasError('departEarlierThanReturn')">
-                    Depart date must be eariler than return date
-                </mat-error>
-                <div class="row mt-3">
-                    <mat-radio-group #oneWayReturn="matRadioGroup" aria-label="Select an option"
-                        formControlName="isOneWay" (change)="_oneWayReturnHandler($event)">
-                        <mat-radio-button value="oneWay">One way</mat-radio-button>
-                        <mat-radio-button value="return" class="ml-3">Return</mat-radio-button>
-                    </mat-radio-group>
-                </div>
-                <div class="row mt-3">
-                    <button mat-raised-button color="primary" type="submit">Search</button>
-                </div>
-            </form>
-        </div>
-        <div class="col col-lg-6 col-sm-12 mt-5">
-            ADS GOES HERE
-        </div>
+<div flexLayout="column" fxLayoutGap="20px" class="mt-5 ml-5">
+  <form [formGroup]="form" (ngSubmit)="searchClicked($event)">
+    <div class="row" formGroupName="airportGroup">
+      <mat-form-field class="w-25">
+        <input
+          matInput
+          placeholder="From"
+          type="text"
+          [formControl]="frLocationControl"
+          [matAutocomplete]="frLocation"
+          formControlName="fromAirport"
+        />
+        <mat-error *ngIf="frLocationControl.hasError('validateAirport')">
+          Please enter a valid airport
+        </mat-error>
+        <mat-autocomplete #frLocation="matAutocomplete">
+          <mat-option
+            *ngFor="let location of filteredLocationsFr | async"
+            [value]="location"
+          >
+            {{ location }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <mat-form-field class="ml-3 w-25">
+        <input
+          matInput
+          placeholder="To"
+          type="text"
+          [formControl]="toLocationControl"
+          [matAutocomplete]="toLocation"
+          formControlName="toAirport"
+        />
+        <mat-error *ngIf="toLocationControl.hasError('validateAirport')">
+          Please enter a valid airport
+        </mat-error>
+        <mat-autocomplete #toLocation="matAutocomplete">
+          <mat-option
+            *ngFor="let location of filteredLocationsTo | async"
+            [value]="location"
+          >
+            {{ location }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
     </div>
-
+    <mat-error *ngIf="airportGroup.hasError('airportsCannotBeTheSame')">
+      Airports cannot be the same
+    </mat-error>
+    <div class="row mt-3" formGroupName="dateGroup">
+      <mat-form-field class="w-25">
+        <input
+          matInput
+          [matDatepicker]="departPicker"
+          placeholder="Choose depart date"
+          formControlName="departDate"
+          [formControl]="departDateControl"
+        />
+        <mat-error *ngIf="departDateControl.hasError('dateIsValid')">
+          Please enter a valid date
+        </mat-error>
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="departPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #departPicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="ml-3 w-25">
+        <input
+          matInput
+          [matDatepicker]="returnPicker"
+          placeholder="{{ returnDatePlaceholder }}"
+          formControlName="returnDate"
+          [formControl]="returnDateControl"
+        />
+        <mat-error *ngIf="returnDateControl.hasError('dateIsValid')">
+          Please enter a valid date
+        </mat-error>
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="returnPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #returnPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <mat-error *ngIf="dateGroup.hasError('departEarlierThanReturn')">
+      Depart date must be eariler than return date
+    </mat-error>
+    <div class="row mt-3">
+      <mat-radio-group
+        #oneWayReturn="matRadioGroup"
+        aria-label="Select an option"
+        formControlName="isOneWay"
+        (change)="_oneWayReturnHandler($event)"
+      >
+        <mat-radio-button value="oneWay">One way</mat-radio-button>
+        <mat-radio-button value="return" class="ml-3">Return</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="row mt-3">
+      <button mat-raised-button color="primary" type="submit">Search</button>
+    </div>
+  </form>
 </div>
