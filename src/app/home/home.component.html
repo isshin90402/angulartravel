@@ -1,18 +1,23 @@
 <div flexLayout="column" fxLayoutGap="20px" class="mt-5 ml-5">
   <form [formGroup]="form" (ngSubmit)="searchClicked($event)">
-    <div flexLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" formGroupName="airportGroup">
+    <div
+      flexLayout="row"
+      fxLayoutAlign="start center"
+      fxLayoutGap="10px"
+      formGroupName="airportGroup"
+    >
       <div>
-          <span style="color: Dodgerblue;">
-              <i class="fas fa-plane-departure"></i>
-            </span>
-          
-          <!-- <mat-icon
+        <span style="color: Dodgerblue;">
+          <i class="fas fa-plane-departure"></i>
+        </span>
+
+        <!-- <mat-icon
           svgIcon="flight_takeoff"
           aria-hidden="false"
           aria-label="Example thumbs up SVG icon"
         ></mat-icon> -->
       </div>
-        <div>
+      <div>
         <mat-form-field class="w-100">
           <input
             matInput
@@ -35,15 +40,18 @@
           </mat-autocomplete>
         </mat-form-field>
       </div>
-        <div>
-          <span style="color: Dodgerblue;"><i class="fas fa-plane-arrival"></i></span>
-            
-            <!-- <mat-icon
+      <div>
+        <span style="color: Dodgerblue;"
+          ><i class="fas fa-plane-arrival"></i
+        ></span>
+
+        <!-- <mat-icon
             svgIcon="flight_land"
             aria-hidden="false"
             aria-label="Example thumbs up SVG icon"
-          ></mat-icon> --></div>
-          <div>
+          ></mat-icon> -->
+      </div>
+      <div>
         <mat-form-field class="w-100">
           <input
             matInput
@@ -65,64 +73,68 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        </div>
-        <mat-error *ngIf="airportGroup.hasError('airportsCannotBeTheSame')">
-            Airports cannot be the same
-          </mat-error>
+      </div>
+      <mat-error *ngIf="airportGroup.hasError('airportsCannotBeTheSame')">
+        Airports cannot be the same
+      </mat-error>
     </div>
-   
-    <div class="mt-2" flexLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" formGroupName="dateGroup">
+
+    <div
+      class="mt-2"
+      flexLayout="row"
+      fxLayoutAlign="start center"
+      fxLayoutGap="10px"
+      formGroupName="dateGroup"
+    >
       <div>
-          <mat-form-field>
-              <input
-                matInput
-                [matDatepicker]="departPicker"
-                placeholder="Choose depart date"
-                formControlName="departDate"
-                [formControl]="departDateControl"
-              />
-              <mat-error *ngIf="departDateControl.hasError('dateIsValid')">
-                Please enter a valid date
-              </mat-error>
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="departPicker"
-              ><mat-icon matDatepickerToggleIcon>
-                <span style="color: Dodgerblue;">
-                  <i class="far fa-calendar-alt"></i>
-                </span>
-              </mat-icon>
-            </mat-datepicker-toggle>
-              <mat-datepicker #departPicker></mat-datepicker>
-            </mat-form-field>
+        <mat-form-field>
+          <input
+            matInput
+            [matDatepicker]="departPicker"
+            placeholder="Choose depart date"
+            formControlName="departDate"
+            [formControl]="departDateControl"
+          />
+          <mat-error *ngIf="departDateControl.hasError('dateIsValid')">
+            Please enter a valid date
+          </mat-error>
+          <mat-datepicker-toggle matSuffix [for]="departPicker"
+            ><mat-icon matDatepickerToggleIcon>
+              <span style="color: Dodgerblue;">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+            </mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #departPicker></mat-datepicker>
+        </mat-form-field>
       </div>
       <div>
-          <mat-form-field>
-              <input
-                matInput
-                [matDatepicker]="returnPicker"
-                placeholder="{{ returnDatePlaceholder }}"
-                formControlName="returnDate"
-                [formControl]="returnDateControl"
-              />
-              <mat-error *ngIf="returnDateControl.hasError('dateIsValid')">
-                Please enter a valid date
-              </mat-error>
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="returnPicker"
-              ><mat-icon matDatepickerToggleIcon>
-                <span style="color: Dodgerblue;"><i class="far fa-calendar-alt"></i></span>
-              </mat-icon>
-            </mat-datepicker-toggle>
-              <mat-datepicker #returnPicker></mat-datepicker>
-            </mat-form-field>
+        <mat-form-field>
+          <input
+            matInput
+            [matDatepicker]="returnPicker"
+            placeholder="{{ returnDatePlaceholder }}"
+            formControlName="returnDate"
+            [formControl]="returnDateControl"
+          />
+          <mat-error *ngIf="returnDateControl.hasError('dateIsValid')">
+            Please enter a valid date
+          </mat-error>
+          <mat-datepicker-toggle matSuffix [for]="returnPicker"
+            ><mat-icon matDatepickerToggleIcon>
+              <span style="color: Dodgerblue;"
+                ><i class="far fa-calendar-alt"></i
+              ></span>
+            </mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #returnPicker></mat-datepicker>
+        </mat-form-field>
       </div>
       <mat-error *ngIf="dateGroup.hasError('departEarlierThanReturn')">
-          Depart date must be eariler than return date
-        </mat-error>
+        Depart date must be eariler than return date
+      </mat-error>
     </div>
-    
+
     <div class="mt-2">
       <mat-radio-group
         #oneWayReturn="matRadioGroup"

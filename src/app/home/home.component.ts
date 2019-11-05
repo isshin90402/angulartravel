@@ -1,166 +1,177 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
-import { MatRadioChange } from '@angular/material/radio';
-import * as moment from 'moment';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { LocationService } from '../shared/location.service';
-import { SabreService } from '../shared/sabre.service';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import {
+  FormControl,
+  FormBuilder,
+  Validators,
+  FormGroup
+} from "@angular/forms";
+import { Observable } from "rxjs";
+import { startWith, map } from "rxjs/operators";
+import { MatRadioChange } from "@angular/material/radio";
+import * as moment from "moment";
+import { Router, ActivatedRoute, ParamMap } from "@angular/router";
+import { LocationService } from "../shared/location.service";
+import { SabreService } from "../shared/sabre.service";
+import { MatIconRegistry } from "@angular/material/icon";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
-	selector: 'app-home',
-	templateUrl: './home.component.html',
-	styleUrls: [ './home.component.css' ]
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.css"]
 })
 export class HomeComponent implements OnInit {
-	@ViewChild('oneWayReturn', { static: false })
-	oneWayReturn: any;
+  @ViewChild("oneWayReturn", { static: false })
+  oneWayReturn: any;
 
-	locations: any[] = [];
-	locationsRefined: any[] = [];
-	filteredLocationsFr: Observable<string[]>;
-	filteredLocationsTo: Observable<string[]>;
+  locations: any[] = [];
+  locationsRefined: any[] = [];
+  filteredLocationsFr: Observable<string[]>;
+  filteredLocationsTo: Observable<string[]>;
 
-	returnDatePlaceholder = 'Choose return date';
+  returnDatePlaceholder = "Choose return date";
 
-	constructor(
-		private locationService: LocationService,
-		private sabreService: SabreService,
-		private formBuilder: FormBuilder,
-		private router: Router,
-		iconRegistry: MatIconRegistry,
-		sanitizer: DomSanitizer
-	) {
-		/*     iconRegistry.addSvgIcon(
+  constructor(
+    private locationService: LocationService,
+    private sabreService: SabreService,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    iconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer
+  ) {
+    /*     iconRegistry.addSvgIcon(
           'flight_takeoff',
           sanitizer.bypassSecurityTrustResourceUrl('assets/icons/flight_takeoff-24px.svg'));
     
         iconRegistry.addSvgIcon(
           'flight_land',
           sanitizer.bypassSecurityTrustResourceUrl('assets/icons/flight_land-24px.svg')); */
-	}
+  }
 
-	frLocationControl: FormControl = new FormControl();
-	toLocationControl: FormControl = new FormControl();
+  frLocationControl: FormControl = new FormControl();
+  toLocationControl: FormControl = new FormControl();
 
-	airportGroup: FormGroup = this.formBuilder.group(
-		{
-			fromAirport: this.frLocationControl,
-			toAirport: this.toLocationControl
-		},
-		{ validators: this._validateSameAirports }
-	);
+  airportGroup: FormGroup = this.formBuilder.group(
+    {
+      fromAirport: this.frLocationControl,
+      toAirport: this.toLocationControl
+    },
+    { validators: this._validateSameAirports }
+  );
 
-	departDateControl: FormControl = new FormControl();
-	returnDateControl: FormControl = new FormControl();
+  departDateControl: FormControl = new FormControl();
+  returnDateControl: FormControl = new FormControl();
 
-	dateGroup: FormGroup = this.formBuilder.group(
-		{
-			departDate: this.departDateControl,
-			returnDate: this.returnDateControl
-		},
-		{ validators: this._validateDepartEarlierThanReturnDate }
-	);
+  dateGroup: FormGroup = this.formBuilder.group(
+    {
+      departDate: this.departDateControl,
+      returnDate: this.returnDateControl
+    },
+    { validators: this._validateDepartEarlierThanReturnDate }
+  );
 
-	form = this.formBuilder.group({
-		airportGroup: this.airportGroup,
-		dateGroup: this.dateGroup,
-		isOneWay: [ '', Validators.required ]
-	});
+  form = this.formBuilder.group({
+    airportGroup: this.airportGroup,
+    dateGroup: this.dateGroup,
+    isOneWay: ["", Validators.required]
+  });
 
-	ngOnInit() {
-		this.locations = this.sabreService.getLocalStorageCities();
+  ngOnInit() {
+    this.locations = this.sabreService.getLocalStorageCities();
 
-		this._getCities;
+    this._getCities;
 
-		this.frLocationControl.setValidators(this._validateAirport.bind(this));
-		this.toLocationControl.setValidators(this._validateAirport.bind(this));
+    this.frLocationControl.setValidators(this._validateAirport.bind(this));
+    this.toLocationControl.setValidators(this._validateAirport.bind(this));
 
-		this.filteredLocationsFr = this.frLocationControl.valueChanges.pipe(
-			startWith(''),
-			map((value) => this._filter(value))
-		);
+    this.filteredLocationsFr = this.frLocationControl.valueChanges.pipe(
+      startWith(""),
+      map(value => this._filter(value))
+    );
 
-		this.filteredLocationsTo = this.toLocationControl.valueChanges.pipe(
-			startWith(''),
-			map((value) => this._filter(value))
-		);
-	}
+    this.filteredLocationsTo = this.toLocationControl.valueChanges.pipe(
+      startWith(""),
+      map(value => this._filter(value))
+    );
+  }
 
-	private _getCities = setInterval(() => {
-		let locationsNow = this.sabreService.getLocalStorageCities();
+  private _getCities = setInterval(() => {
+    let locationsNow = this.sabreService.getLocalStorageCities();
 
-		if (locationsNow.length === 0) {
-			return;
-		}
+    if (locationsNow.length === 0) {
+      return;
+    }
 
-		this.locationsRefined = locationsNow.map((x) => x.name + ' (' + x.code + ')' + ', ' + x.countryName);
-		clearInterval(this._getCities);
-	}, 2000);
+    this.locationsRefined = locationsNow.map(
+      x => x.name + " (" + x.code + ")" + ", " + x.countryName
+    );
+    clearInterval(this._getCities);
+  }, 2000);
 
-	private _validateAirport(control: FormControl) {
-		if (this.locationsRefined.length === 0) {
-			return;
-		}
-		return this.locationsRefined.includes(control.value) ? null : { validateAirport: { valid: false } };
-	}
+  private _validateAirport(control: FormControl) {
+    if (this.locationsRefined.length === 0) {
+      return;
+    }
+    return this.locationsRefined.includes(control.value)
+      ? null
+      : { validateAirport: { valid: false } };
+  }
 
-	private _validateDepartEarlierThanReturnDate(formGroup: FormGroup) {
-		const departDate = formGroup.get('departDate').value;
-		const returnDate = formGroup.get('returnDate').value;
+  private _validateDepartEarlierThanReturnDate(formGroup: FormGroup) {
+    const departDate = formGroup.get("departDate").value;
+    const returnDate = formGroup.get("returnDate").value;
 
-		if (departDate === null || returnDate === null) {
-			return null;
-		} else if (departDate <= returnDate) {
-			return null;
-		} else {
-			return { departEarlierThanReturn: { valid: false } };
-		}
-	}
+    if (departDate === null || returnDate === null) {
+      return null;
+    } else if (departDate <= returnDate) {
+      return null;
+    } else {
+      return { departEarlierThanReturn: { valid: false } };
+    }
+  }
 
-	private _validateSameAirports(formGroup: FormGroup) {
-		const fromAirport = formGroup.get('fromAirport').value;
-		const toAirport = formGroup.get('toAirport').value;
+  private _validateSameAirports(formGroup: FormGroup) {
+    const fromAirport = formGroup.get("fromAirport").value;
+    const toAirport = formGroup.get("toAirport").value;
 
-		if (fromAirport === null || toAirport === null) {
-			return null;
-		} else if (fromAirport === toAirport) {
-			return { airportsCannotBeTheSame: { valid: false } };
-		}
-	}
+    if (fromAirport === null || toAirport === null) {
+      return null;
+    } else if (fromAirport === toAirport) {
+      return { airportsCannotBeTheSame: { valid: false } };
+    }
+  }
 
-	private _filter(value: string): string[] {
-		const filterValue = value.toLowerCase();
-		if (this.locationsRefined.length === 0) {
-			return;
-		}
-		return this.locationsRefined.filter((option) => option.toLowerCase().includes(filterValue));
-	}
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    if (this.locationsRefined.length === 0) {
+      return;
+    }
+    return this.locationsRefined.filter(option =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
 
-	// Need to improve
-	private _oneWayReturnHandler(event: MatRadioChange) {
-		if (event.value === 'oneWay') {
-			this.returnDatePlaceholder = 'One way';
-			this.returnDateControl.disable();
-		} else if (event.value === 'return') {
-			this.returnDatePlaceholder = 'Choose return date';
-			this.returnDateControl.enable();
-		}
-	}
+  // Need to improve
+  private _oneWayReturnHandler(event: MatRadioChange) {
+    if (event.value === "oneWay") {
+      this.returnDatePlaceholder = "One way";
+      this.returnDateControl.disable();
+    } else if (event.value === "return") {
+      this.returnDatePlaceholder = "Choose return date";
+      this.returnDateControl.enable();
+    }
+  }
 
-	// Not working
-	private _validateDate(control: FormControl) {
-		if (moment(control.value, 'DD-MM-YYYY', true).isValid()) {
-			return null;
-		} else {
-			return { dateIsValid: { valid: false } };
-		}
-	}
+  // Not working
+  private _validateDate(control: FormControl) {
+    if (moment(control.value, "DD-MM-YYYY", true).isValid()) {
+      return null;
+    } else {
+      return { dateIsValid: { valid: false } };
+    }
+  }
 
-	public searchClicked(event: Event) {
-		this.router.navigate([ '/flights' ]);
-	}
+  public searchClicked(event: Event) {
+    this.router.navigate(["/flights"]);
+  }
 }

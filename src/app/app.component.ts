@@ -1,27 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { SabreService } from './shared/sabre.service';
+import { Component, OnInit } from "@angular/core";
+import { SabreService } from "./shared/sabre.service";
 
 @Component({
-	selector: 'app-root',
-	templateUrl: './app.component.html',
-	styleUrls: [ './app.component.css' ]
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent implements OnInit {
-	token = '';
+  token = "";
 
-	constructor(private sabreService: SabreService) {}
+  constructor(private sabreService: SabreService) {}
 
-	ngOnInit() {
-		this.token = this.sabreService.getLocalStorageToken();
+  ngOnInit() {
+    this.token = this.sabreService.getLocalStorageToken();
 
-		if (this.token === '') {
-			this.sabreService.setAuthToken();
-		}
+    if (this.token === "") {
+      this.sabreService.setAuthToken();
+    }
+  }
 
-		this._getCities;
-	}
-
-	private _getCities = setInterval(() => {
+  /* 	private _getCities = setInterval(() => {
 		let tokenNow = this.sabreService.getLocalStorageToken();
 
 		if (tokenNow === '') {
@@ -33,5 +31,5 @@ export class AppComponent implements OnInit {
 			localStorage.setItem('cities', JSON.stringify({ cities: this.sabreService.cities }));
 			clearInterval(this._getCities);
 		});
-	}, 2000);
+	}, 2000); */
 }
