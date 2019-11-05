@@ -24,8 +24,8 @@ export class HomeComponent implements OnInit {
   @ViewChild('oneWayReturn', { static: false })
   oneWayReturn: any;
 
-  locations: any[];
-  locationsRefined: any[];
+  locations: any[] = [];
+  locationsRefined: any[] = [];
   filteredLocationsFr: Observable<string[]>;
   filteredLocationsTo: Observable<string[]>;
 
@@ -39,14 +39,14 @@ export class HomeComponent implements OnInit {
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer
   ) {
-    iconRegistry.addSvgIcon(
-      'flight_takeoff',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/flight_takeoff-24px.svg'));
-
-    iconRegistry.addSvgIcon(
-        'flight_land',
-        sanitizer.bypassSecurityTrustResourceUrl('assets/icons/flight_land-24px.svg'));
-}
+    /*     iconRegistry.addSvgIcon(
+          'flight_takeoff',
+          sanitizer.bypassSecurityTrustResourceUrl('assets/icons/flight_takeoff-24px.svg'));
+    
+        iconRegistry.addSvgIcon(
+          'flight_land',
+          sanitizer.bypassSecurityTrustResourceUrl('assets/icons/flight_land-24px.svg')); */
+  }
 
   frLocationControl: FormControl = new FormControl();
   toLocationControl: FormControl = new FormControl();
@@ -77,12 +77,9 @@ export class HomeComponent implements OnInit {
   });
 
   ngOnInit() {
-    // this.locations = this.locationService.getLocations();
     this.locations = this.sabreService.getLocalStorageCities();
 
-    this.locationsRefined = this.locations.map(
-      x => x.name + ' (' + x.code + ')' + ', ' + x.countryName
-    );
+    this._getCities;
 
     this.frLocationControl.setValidators(this._validateAirport.bind(this));
     this.toLocationControl.setValidators(this._validateAirport.bind(this));
@@ -98,7 +95,21 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  private _getCities = setInterval(() => {
+    let locationsNow = this.sabreService.getLocalStorageCities();
+
+    if (locationsNow.length === 0) {
+      return;
+    }
+
+    this.locationsRefined = locationsNow.map(
+      x => x.name + ' (' + x.code + ')' + ', ' + x.countryName
+    );
+    clearInterval(this._getCities);
+  }, 2000);
+
   private _validateAirport(control: FormControl) {
+    if (this.locationsRefined.length === 0) { return; }
     return this.locationsRefined.includes(control.value)
       ? null
       : { validateAirport: { valid: false } };
@@ -130,7 +141,7 @@ export class HomeComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
+    if (this.locationsRefined.length === 0) { return; }
     return this.locationsRefined.filter(option =>
       option.toLowerCase().includes(filterValue)
     );

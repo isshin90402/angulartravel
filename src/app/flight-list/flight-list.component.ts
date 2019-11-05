@@ -9,7 +9,7 @@ import { SabreService } from '../shared/sabre.service';
 export class FlightListComponent implements OnInit {
   token: string;
 
-  constructor(private sabreService: SabreService) {}
+  constructor(private sabreService: SabreService) { }
 
   ngOnInit() {
     this.token = this.sabreService.getLocalStorageToken();
