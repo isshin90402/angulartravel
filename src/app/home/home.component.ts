@@ -1,35 +1,26 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormControl,
   FormBuilder,
   Validators,
   FormGroup
-} from "@angular/forms";
-import { Observable } from "rxjs";
-import { startWith, map } from "rxjs/operators";
-import { MatRadioChange } from "@angular/material/radio";
-import * as moment from "moment";
-import { Router, ActivatedRoute, ParamMap } from "@angular/router";
-import { LocationService } from "../shared/location.service";
-import { SabreService } from "../shared/sabre.service";
-import { MatIconRegistry } from "@angular/material/icon";
-import { DomSanitizer } from "@angular/platform-browser";
+} from '@angular/forms';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+import { MatRadioChange } from '@angular/material/radio';
+import * as moment from 'moment';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { LocationService } from '../shared/location.service';
+import { SabreService } from '../shared/sabre.service';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-  selector: "app-home",
-  templateUrl: "./home.component.html",
-  styleUrls: ["./home.component.css"]
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  @ViewChild("oneWayReturn", { static: false })
-  oneWayReturn: any;
-
-  locations: any[] = [];
-  locationsRefined: any[] = [];
-  filteredLocationsFr: Observable<string[]>;
-  filteredLocationsTo: Observable<string[]>;
-
-  returnDatePlaceholder = "Choose return date";
 
   constructor(
     private locationService: LocationService,
@@ -42,11 +33,20 @@ export class HomeComponent implements OnInit {
     /*     iconRegistry.addSvgIcon(
           'flight_takeoff',
           sanitizer.bypassSecurityTrustResourceUrl('assets/icons/flight_takeoff-24px.svg'));
-    
+
         iconRegistry.addSvgIcon(
           'flight_land',
           sanitizer.bypassSecurityTrustResourceUrl('assets/icons/flight_land-24px.svg')); */
   }
+  @ViewChild('oneWayReturn', { static: false })
+  oneWayReturn: any;
+
+  locations: any[] = [];
+  locationsRefined: any[] = [];
+  filteredLocationsFr: Observable<string[]>;
+  filteredLocationsTo: Observable<string[]>;
+
+  returnDatePlaceholder = 'Choose return date';
 
   frLocationControl: FormControl = new FormControl();
   toLocationControl: FormControl = new FormControl();
@@ -73,8 +73,21 @@ export class HomeComponent implements OnInit {
   form = this.formBuilder.group({
     airportGroup: this.airportGroup,
     dateGroup: this.dateGroup,
-    isOneWay: ["", Validators.required]
+    isOneWay: ['', Validators.required]
   });
+
+  private _getCities = setInterval(() => {
+    const locationsNow = this.sabreService.getLocalStorageCities();
+
+    if (locationsNow.length === 0) {
+      return;
+    }
+
+    this.locationsRefined = locationsNow.map(
+      x => x.name + ' (' + x.code + ')' + ', ' + x.countryName
+    );
+    clearInterval(this._getCities);
+  }, 2000);
 
   ngOnInit() {
     this.locations = this.sabreService.getLocalStorageCities();
@@ -85,28 +98,15 @@ export class HomeComponent implements OnInit {
     this.toLocationControl.setValidators(this._validateAirport.bind(this));
 
     this.filteredLocationsFr = this.frLocationControl.valueChanges.pipe(
-      startWith(""),
+      startWith(''),
       map(value => this._filter(value))
     );
 
     this.filteredLocationsTo = this.toLocationControl.valueChanges.pipe(
-      startWith(""),
+      startWith(''),
       map(value => this._filter(value))
     );
   }
-
-  private _getCities = setInterval(() => {
-    let locationsNow = this.sabreService.getLocalStorageCities();
-
-    if (locationsNow.length === 0) {
-      return;
-    }
-
-    this.locationsRefined = locationsNow.map(
-      x => x.name + " (" + x.code + ")" + ", " + x.countryName
-    );
-    clearInterval(this._getCities);
-  }, 2000);
 
   private _validateAirport(control: FormControl) {
     if (this.locationsRefined.length === 0) {
@@ -118,8 +118,8 @@ export class HomeComponent implements OnInit {
   }
 
   private _validateDepartEarlierThanReturnDate(formGroup: FormGroup) {
-    const departDate = formGroup.get("departDate").value;
-    const returnDate = formGroup.get("returnDate").value;
+    const departDate = formGroup.get('departDate').value;
+    const returnDate = formGroup.get('returnDate').value;
 
     if (departDate === null || returnDate === null) {
       return null;
@@ -131,8 +131,8 @@ export class HomeComponent implements OnInit {
   }
 
   private _validateSameAirports(formGroup: FormGroup) {
-    const fromAirport = formGroup.get("fromAirport").value;
-    const toAirport = formGroup.get("toAirport").value;
+    const fromAirport = formGroup.get('fromAirport').value;
+    const toAirport = formGroup.get('toAirport').value;
 
     if (fromAirport === null || toAirport === null) {
       return null;
@@ -153,18 +153,18 @@ export class HomeComponent implements OnInit {
 
   // Need to improve
   private _oneWayReturnHandler(event: MatRadioChange) {
-    if (event.value === "oneWay") {
-      this.returnDatePlaceholder = "One way";
+    if (event.value === 'oneWay') {
+      this.returnDatePlaceholder = 'One way';
       this.returnDateControl.disable();
-    } else if (event.value === "return") {
-      this.returnDatePlaceholder = "Choose return date";
+    } else if (event.value === 'return') {
+      this.returnDatePlaceholder = 'Choose return date';
       this.returnDateControl.enable();
     }
   }
 
   // Not working
   private _validateDate(control: FormControl) {
-    if (moment(control.value, "DD-MM-YYYY", true).isValid()) {
+    if (moment(control.value, 'DD-MM-YYYY', true).isValid()) {
       return null;
     } else {
       return { dateIsValid: { valid: false } };
@@ -172,6 +172,6 @@ export class HomeComponent implements OnInit {
   }
 
   public searchClicked(event: Event) {
-    this.router.navigate(["/flights"]);
+    this.router.navigate(['/flights']);
   }
 }
